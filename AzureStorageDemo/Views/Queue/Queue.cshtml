@@ -1,0 +1,13 @@
+﻿@{
+    ViewBag.Title = "Queue";
+}
+
+<h2>Queue</h2>
+
+@model AzureStorageDemo.Models.QueueViewModel
+
+@Model.Uri
+
+Messages: @Model.Messages
+
+<a href="@Url.Action("ProcessQueue", new { name = Model.Name })">Process all messages</a>

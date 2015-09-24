@@ -1,0 +1,55 @@
+﻿@{
+    ViewBag.Title = "Index";
+}
+
+@using AzureStorageDemo.Models
+@model HomeViewModel
+
+<h2>Index</h2>
+
+<h4>Blobs</h4>
+
+@foreach (var container in Model.Containers)
+{
+    <div>
+        <a href="@Url.Action("Details", new { uri = container.Value })">@container.Key</a>
+    </div>    
+}
+
+<h4>Queues</h4>
+
+@foreach (var container in Model.Queues)
+{
+    <div>
+        <a href="@Url.Action("Queue", "Queue", new { uri = container.Value })">@container.Key</a>
+    </div>    
+}
+
+<div>
+    <h3>Azure Blob</h3>
+    <p>
+        - Upload a file to Azure Blob
+        <br />
+        - List all files
+        <br />
+        - Delete a file    
+    </p>
+
+    <a href="@Url.Action("Upload")">Upload file to Azure</a>
+</div>
+
+<div>
+    <h3>Azure Queue</h3>
+    <p>
+        - Put a message into the Queue
+        <br />
+        - Process the message, write to a file in Azure Blob
+        <br />
+        - Pop a message out of the Queue
+        <br />
+        - Read the result file
+    </p>
+
+    <a href="@Url.Action("NewMessage", "Queue")">Put a new message</a>
+</div>
+

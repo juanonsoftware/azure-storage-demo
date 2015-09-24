@@ -1,0 +1,15 @@
+﻿@{
+    ViewBag.Title = "Details";
+}
+@model List<AzureStorageDemo.Models.BlobViewModel>
+<h2>Details</h2>
+
+@foreach (var blob in Model)
+{
+    <div>
+        @blob.Name @blob.Uri
+        <br />
+        @blob.ContentType @blob.Length
+        <a href="@Url.Action("Delete", new { uri = blob.Uri })">Delete</a>
+    </div>
+}
