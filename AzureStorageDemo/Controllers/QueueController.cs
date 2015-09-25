@@ -23,31 +23,36 @@ namespace AzureStorageDemo.Controllers
 
         public ActionResult ProcessQueue(string name)
         {
+            // Get the queue on Azure
             var cloudQueue = _queueClient.GetQueueReference(name);
-            cloudQueue.CreateIfNotExists();
 
+            // Prepare an Append Blob
             var container = _blobClient.GetContainerReference(DateTime.Now.ToString("yyyy-MM"));
             container.CreateIfNotExists();
 
+            var blob = container.GetAppendBlobReference("Messages");
+            if (!blob.Exists())
+            {
+                blob.CreateOrReplace();
+            }
+
             while (true)
             {
+                // Peek a message
                 var queueMessage = cloudQueue.PeekMessage();
                 if (queueMessage == null)
                 {
                     break;
                 }
 
-                var blob = container.GetAppendBlobReference("Messages");
-                if (!blob.Exists())
-                {
-                    blob.CreateOrReplace();
-                }
-
+                // Process the message
                 var message = queueMessage.AsString.Deserialize<Message>();
                 message.ProcessedAt = DateTime.Now;
 
+                // Append to a storage
                 blob.AppendText(message.Serialize());
 
+                // Delete message from the queue
                 queueMessage = cloudQueue.GetMessage();
                 cloudQueue.DeleteMessage(queueMessage);
             }
